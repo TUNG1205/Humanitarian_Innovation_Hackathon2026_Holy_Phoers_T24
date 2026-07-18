@@ -2,34 +2,37 @@ import { AlertTriangle } from "lucide-react";
 import { useWeather } from "../../hooks/useWeather";
 import { FALLBACK_WEATHER } from "../../data/climate";
 import { IMPACT_DATA } from "../../data/impact";
+import { ALERT_LEVELS } from "../../data/alertLevels";
 import { mono, condensed, sans, cardBorder, radius, alertColor } from "../../lib/theme";
 import { SectionTitle } from "../shared/SectionTitle";
 import { StatCard } from "../shared/StatCard";
 
-export function OverviewTab({ alertLevel, region }: { alertLevel: number; region: string }) {
-  const { current, forecast, loading } = useWeather();
-  const forecastDays = forecast.length ? forecast : FALLBACK_WEATHER;
+// US AQI breakpoints (airnow.gov).
+function aqiCategory(aqi: number): { label: string; color: string } {
+  if (aqi <= 50) return { label: "Good", color: "#22c55e" };
+  if (aqi <= 100) return { label: "Moderate", color: "#facc15" };
+  if (aqi <= 150) return { label: "Unhealthy (sensitive groups)", color: "#fb923c" };
+  if (aqi <= 200) return { label: "Unhealthy — stay indoors", color: "#ef4444" };
+  if (aqi <= 300) return { label: "Very unhealthy", color: "#a78bfa" };
+  return { label: "Hazardous", color: "#7f1d1d" };
+}
 
-  const alertCfg = [
-    null,
-    { label: "LEVEL 1 — NORMAL", color: "#22c55e", bg: "#052e16" },
-    { label: "LEVEL 2 — ELEVATED RISK", color: "#facc15", bg: "#1c1400" },
-    { label: "LEVEL 3 — HIGH ALERT", color: "#fb923c", bg: "#1c0a00" },
-    { label: "LEVEL 4 — SEVERE WARNING", color: "#ef4444", bg: "#1c0000" },
-    { label: "LEVEL 5 — EMERGENCY", color: "#ff0040", bg: "#200010" },
-  ][alertLevel]!;
+export function OverviewTab({ alertLevel, region }: { alertLevel: number; region: string }) {
+  const { current, forecast, airQuality, loading } = useWeather();
+  const forecastDays = forecast.length ? forecast : FALLBACK_WEATHER;
+  const alertCfg = ALERT_LEVELS[alertLevel]!;
 
   return (
     <div style={{ display: "grid", gap: 22 }}>
       <div style={{
-        background: "linear-gradient(120deg, #2a1200, #1c0e04)", border: `1px solid ${alertColor}`, borderRadius: radius,
+        background: "linear-gradient(120deg, #2a1200, #1c0e04)", border: `1px solid ${alertCfg.color}`, borderRadius: radius,
         padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <AlertTriangle size={18} color="#f97316" />
+          <AlertTriangle size={18} color={alertCfg.color} />
           <div>
-            <div style={{ fontFamily: condensed, fontSize: 16, fontWeight: 700, color: "#f97316", letterSpacing: "0.1em" }}>
-              ACTIVE WEATHER ADVISORY — {region.toUpperCase()}
+            <div style={{ fontFamily: condensed, fontSize: 16, fontWeight: 700, color: alertCfg.color, letterSpacing: "0.1em" }}>
+              {alertCfg.label} — {region.toUpperCase()}
             </div>
             <div style={{ fontFamily: mono, fontSize: 10, color: "#c47a4a", marginTop: 3 }}>
               Tropical Storm Watch · Coastal Flood Advisory · High Wind Warning in Effect
@@ -47,7 +50,7 @@ export function OverviewTab({ alertLevel, region }: { alertLevel: number; region
         <StatCard label="HUMIDITY" value={current ? `${current.humidity}` : "—"} unit="%" sub={current ? current.condition : "Loading live data…"} />
         <StatCard label="SEA LEVEL RISE" value="+24.3" unit="mm" sub="From 2000 baseline (modeled)" accent="#60a5fa" />
         <StatCard label="RAINFALL (NOW)" value={current ? `${current.precipitation}` : "—"} unit="mm/hr" sub={loading ? "Loading live data…" : "Lami, Fiji — live"} accent="#f97316" />
-        <StatCard label="AIR QUALITY" value="158" unit="AQI" sub="Unhealthy — stay indoors (modeled)" accent="#ef4444" />
+        <StatCard label="AIR QUALITY" value={airQuality !== null ? `${airQuality}` : "—"} unit="AQI" sub={loading ? "Loading live data…" : airQuality !== null ? aqiCategory(airQuality).label : "Lami, Fiji — live"} accent={airQuality !== null ? aqiCategory(airQuality).color : "#ef4444"} />
       </div>
 
       <div>

@@ -1,16 +1,20 @@
 import { AlertTriangle, Radio, MapPin, Wifi, WifiOff } from "lucide-react";
 import { REGIONS, TABS } from "../data/regions";
+import { ALERT_LEVELS } from "../data/alertLevels";
 import { mono, condensed, radiusSm, accent } from "../lib/theme";
 
 interface HeaderProps {
   region: string;
   setRegion: (region: string) => void;
+  alertLevel: number;
   isOffline: boolean;
   tab: string;
   setTab: (tab: string) => void;
 }
 
-export function Header({ region, setRegion, isOffline, tab, setTab }: HeaderProps) {
+export function Header({ region, setRegion, alertLevel, isOffline, tab, setTab }: HeaderProps) {
+  const alertCfg = ALERT_LEVELS[alertLevel]!;
+
   return (
     <header style={{ borderBottom: "1px solid rgba(148,163,184,0.12)", background: "#0a0f1a", position: "sticky", top: 0, zIndex: 40 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
@@ -41,12 +45,12 @@ export function Header({ region, setRegion, isOffline, tab, setTab }: HeaderProp
           </div>
 
           <div style={{
-            background: "#1c0800", border: "1px solid #facc15", borderRadius: radiusSm,
-            color: "#facc15", fontFamily: condensed, fontSize: 13, fontWeight: 700,
+            background: alertCfg.bg, border: `1px solid ${alertCfg.color}`, borderRadius: radiusSm,
+            color: alertCfg.color, fontFamily: condensed, fontSize: 13, fontWeight: 700,
             letterSpacing: "0.1em", padding: "5px 12px", display: "flex", alignItems: "center", gap: 6,
           }}>
             <AlertTriangle size={13} />
-            LEVEL 2 — ELEVATED RISK
+            {alertCfg.label}
           </div>
 
           <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.08em", color: isOffline ? "#f97316" : "#22c55e", display: "flex", alignItems: "center", gap: 4 }}>

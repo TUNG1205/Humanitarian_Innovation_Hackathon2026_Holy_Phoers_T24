@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./.tsbuild/api",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    "moduleResolution": "Bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+
+    "strict": true
+  },
+  "include": ["api"]
+}

@@ -21,7 +21,7 @@ export default function App() {
       fontFamily: sans,
       background: "radial-gradient(1100px 500px at 50% -10%, rgba(34,211,238,0.07), transparent), #0a0f1a",
     }}>
-      <Header region={region} setRegion={setRegion} isOffline={isOffline} tab={tab} setTab={setTab} />
+      <Header region={region} setRegion={setRegion} alertLevel={alertLevel} isOffline={isOffline} tab={tab} setTab={setTab} />
 
       <main style={{ maxWidth: 1400, margin: "0 auto", padding: "22px 20px 40px" }}>
         {tab === "overview"   && <OverviewTab alertLevel={alertLevel} region={region} />}
