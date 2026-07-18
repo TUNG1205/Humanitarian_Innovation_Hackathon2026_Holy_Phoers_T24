@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Polyline, Polygon, Rectangle, Circle, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { mono, condensed, sans, cardBorder, radius, radiusSm, accent } from "../../lib/theme";
+import { mono, condensed, sans, cardBorder, radius, radiusSm, accent, cardBg, cardShadow } from "../../lib/theme";
 import { SectionTitle } from "../shared/SectionTitle";
 import { RiskBadge } from "../shared/RiskBadge";
 import {
@@ -71,8 +71,8 @@ export function DigitalTwinTab() {
             fontFamily: condensed, fontSize: 13, fontWeight: 700, letterSpacing: "0.1em",
             padding: "8px 18px", cursor: "pointer", borderRadius: radiusSm,
             border: `1px solid ${layer === l ? accent : "rgba(255,255,255,0.1)"}`,
-            background: layer === l ? "rgba(56,189,248,0.1)" : "#131a26",
-            color: layer === l ? accent : "#8895a7",
+            background: layer === l ? "rgba(56,189,248,0.1)" : cardBg,
+            color: layer === l ? accent : "#a3b1c9",
           }}>
             {l === "evacuation" ? "EVACUATION ROUTES" : l === "drainage" ? "DRAINAGE SYSTEMS" : "SUSCEPTIBILITY ZONES"}
           </button>
@@ -81,12 +81,12 @@ export function DigitalTwinTab() {
 
       <div style={{ background: "#0c111c", border: cardBorder, borderRadius: radius, overflow: "hidden" }}>
         <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
-          <div style={{ fontFamily: condensed, fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: "#8895a7" }}>
+          <div style={{ fontFamily: condensed, fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: "#a3b1c9" }}>
             {layer === "evacuation" ? "DIGITAL TWIN — EVACUATION ROUTE MODEL — LAMI, FIJI" :
              layer === "drainage" ? "DIGITAL TWIN — DRAINAGE INFRASTRUCTURE — LAMI, FIJI" :
              "DIGITAL TWIN — DISASTER SUSCEPTIBILITY MODEL — LAMI, FIJI"}
           </div>
-          <div style={{ fontFamily: mono, fontSize: 9, color: "#3d4a63" }}>ILLUSTRATIVE OVERLAY — NOT AN OFFICIAL EVACUATION PLAN</div>
+          <div style={{ fontFamily: mono, fontSize: 9, color: "#8492ab" }}>ILLUSTRATIVE OVERLAY — NOT AN OFFICIAL EVACUATION PLAN</div>
         </div>
 
         <div style={{ position: "relative", height: 460 }}>
@@ -163,12 +163,12 @@ export function DigitalTwinTab() {
               { id: "A2", area: "VEISARI ROUTE", capacity: "~500 people", elevation: "Est. 38m above sea level", facilities: "Water point, covered shelter area" },
               { id: "A3", area: "WAILADA ROUTE", capacity: "~600 people", elevation: "Est. 52m above sea level", facilities: "Water point, first aid station" },
             ].map((item, i) => (
-              <div key={i} style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "16px 18px" }}>
+              <div key={i} style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "16px 18px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                   <div style={{ fontFamily: condensed, fontSize: 14, fontWeight: 700, letterSpacing: "0.08em", color: "#f1f5f9", maxWidth: 150 }}>{item.area}</div>
                   <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", padding: "3px 8px", background: "#14532d", border: "1px solid #22c55e", color: "#22c55e" }}>{item.id}</div>
                 </div>
-                <div style={{ fontFamily: sans, fontSize: 12, color: "#8a97ab", lineHeight: 1.65, marginBottom: 10 }}>{item.facilities}</div>
+                <div style={{ fontFamily: sans, fontSize: 12, color: "#a3b1c9", lineHeight: 1.65, marginBottom: 10 }}>{item.facilities}</div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontFamily: mono, fontSize: 11, color: "#60a5fa" }}>
                   <span>CAPACITY: {item.capacity}</span>
                   <span>{item.elevation}</span>
@@ -176,7 +176,7 @@ export function DigitalTwinTab() {
               </div>
             ))}
           </div>
-          <div style={{ fontFamily: mono, fontSize: 9, color: "#3d4a63", marginTop: 10 }}>
+          <div style={{ fontFamily: mono, fontSize: 9, color: "#8492ab", marginTop: 10 }}>
             Capacity and elevation figures are illustrative planning estimates, not surveyed data.
           </div>
         </div>
@@ -192,12 +192,12 @@ export function DigitalTwinTab() {
               { title: "UNDERGROUND CISTERNS", priority: "CRITICAL", desc: "3 × 500,000-gallon cisterns under City Center Park. 72-hour surge storage capacity.", cost: "$8.1M" },
               { title: "PERMEABLE PAVEMENT", priority: "MODERATE", desc: "Replace 40% of parking surfaces. Reduces surface runoff by 35% per treated area.", cost: "$1.6M" },
             ].map((item, i) => (
-              <div key={i} style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "16px 18px" }}>
+              <div key={i} style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "16px 18px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                   <div style={{ fontFamily: condensed, fontSize: 14, fontWeight: 700, letterSpacing: "0.08em", color: "#f1f5f9", maxWidth: 140 }}>{item.title}</div>
                   <RiskBadge level={item.priority} />
                 </div>
-                <div style={{ fontFamily: sans, fontSize: 12, color: "#8a97ab", lineHeight: 1.65, marginBottom: 10 }}>{item.desc}</div>
+                <div style={{ fontFamily: sans, fontSize: 12, color: "#a3b1c9", lineHeight: 1.65, marginBottom: 10 }}>{item.desc}</div>
                 <div style={{ fontFamily: mono, fontSize: 11, color: "#60a5fa" }}>EST. COST: {item.cost}</div>
               </div>
             ))}

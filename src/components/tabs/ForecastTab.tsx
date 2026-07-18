@@ -7,7 +7,7 @@ import { FALLBACK_WEATHER } from "../../data/climate";
 import { FALLBACK_RISK_CARDS } from "../../data/riskFallback";
 import { useWeather } from "../../hooks/useWeather";
 import { useRiskAssessment } from "../../hooks/useRiskAssessment";
-import { mono, condensed, sans, cardBorder, radius, radiusSm } from "../../lib/theme";
+import { mono, condensed, sans, cardBorder, radius, radiusSm, cardBg, cardShadow } from "../../lib/theme";
 import { SectionTitle } from "../shared/SectionTitle";
 import { RiskBadge } from "../shared/RiskBadge";
 
@@ -19,8 +19,8 @@ export function ForecastTab({ region }: { region: string }) {
   const riskCards = risk.assessments ?? FALLBACK_RISK_CARDS;
 
   const tt = {
-    contentStyle: { background: "#131a26", border: "1px solid rgba(255,255,255,0.12)", borderRadius: radiusSm, fontFamily: mono, fontSize: 11, color: "#f1f5f9" },
-    labelStyle: { color: "#8895a7" },
+    contentStyle: { background: cardBg, border: "1px solid rgba(255,255,255,0.12)", borderRadius: radiusSm, boxShadow: cardShadow, fontFamily: mono, fontSize: 11, color: "#f1f5f9" },
+    labelStyle: { color: "#a3b1c9" },
     itemStyle: { color: "#f1f5f9" },
   };
 
@@ -32,9 +32,9 @@ export function ForecastTab({ region }: { region: string }) {
 
   return (
     <div style={{ display: "grid", gap: 20 }}>
-      <div style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "20px 22px" }}>
+      <div style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "20px 22px" }}>
         <SectionTitle>Sea Level Rise Projection — 2000–2050 · {region}</SectionTitle>
-        <div style={{ fontFamily: mono, fontSize: 11, color: error ? "#fda4af" : "#94a3b8", marginTop: 8 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, color: error ? "#fda4af" : "#b8c4da", marginTop: 8 }}>
           {statusText}
         </div>
         <ResponsiveContainer width="100%" height={220}>
@@ -46,8 +46,8 @@ export function ForecastTab({ region }: { region: string }) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="year" tick={{ fontFamily: mono, fontSize: 10, fill: "#4b5875" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontFamily: mono, fontSize: 10, fill: "#4b5875" }} axisLine={false} tickLine={false} unit="mm" />
+            <XAxis dataKey="year" tick={{ fontFamily: mono, fontSize: 10, fill: "#8492ab" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontFamily: mono, fontSize: 10, fill: "#8492ab" }} axisLine={false} tickLine={false} unit="mm" />
             <Tooltip {...tt} />
             <ReferenceLine x="2025" stroke="#f97316" strokeDasharray="4 4"
               label={{ value: "NOW", fill: "#f97316", fontSize: 9, fontFamily: mono, position: "top" }} />
@@ -57,7 +57,7 @@ export function ForecastTab({ region }: { region: string }) {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-        <div style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "20px 22px" }}>
+        <div style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "20px 22px" }}>
           <SectionTitle>7-Day Forecast — {loading ? "syncing live data…" : "Lami, Fiji"}</SectionTitle>
           {error ? (
             <div style={{ color: "#fda4af", fontFamily: mono, fontSize: 12, padding: "18px 10px" }}>
@@ -67,8 +67,8 @@ export function ForecastTab({ region }: { region: string }) {
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={forecastDays} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="d" tick={{ fontFamily: mono, fontSize: 10, fill: "#4b5875" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontFamily: mono, fontSize: 10, fill: "#4b5875" }} axisLine={false} tickLine={false} unit="°" domain={[20, 42]} />
+                <XAxis dataKey="d" tick={{ fontFamily: mono, fontSize: 10, fill: "#8492ab" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontFamily: mono, fontSize: 10, fill: "#8492ab" }} axisLine={false} tickLine={false} unit="°" domain={[20, 42]} />
                 <Tooltip {...tt} />
                 <Line key="high-line" type="monotone" dataKey="hi" stroke="#f97316" strokeWidth={2} dot={false} name="High (°C)" />
                 <Line key="low-line" type="monotone" dataKey="lo" stroke="#facc15" strokeWidth={2} dot={false} name="Low (°C)" />
@@ -77,12 +77,12 @@ export function ForecastTab({ region }: { region: string }) {
           )}
         </div>
 
-        <div style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "20px 22px" }}>
+        <div style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "20px 22px" }}>
           <SectionTitle>Live Conditions — {loading ? "fetching..." : "Lami, Fiji"}</SectionTitle>
           <div style={{ display: "grid", gap: 14 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", color: "#f1f5f9" }}>
               <div style={{ fontFamily: condensed, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em" }}>CURRENT</div>
-              <div style={{ fontFamily: mono, fontSize: 10, color: "#94a3b8" }}>{loading ? "live update..." : current?.condition ?? "—"}</div>
+              <div style={{ fontFamily: mono, fontSize: 10, color: "#b8c4da" }}>{loading ? "live update..." : current?.condition ?? "—"}</div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: radiusSm, padding: 12 }}>
@@ -120,12 +120,12 @@ export function ForecastTab({ region }: { region: string }) {
         </SectionTitle>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
           {riskCards.map((item, i) => (
-            <div key={i} style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "16px 18px" }}>
+            <div key={i} style={{ background: cardBg, border: cardBorder, borderRadius: radius, boxShadow: cardShadow, padding: "16px 18px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <div style={{ fontFamily: condensed, fontSize: 15, fontWeight: 700, letterSpacing: "0.1em", color: "#f1f5f9" }}>{item.title}</div>
                 <RiskBadge level={item.risk} />
               </div>
-              <div style={{ fontFamily: sans, fontSize: 12, color: "#94a3b8", lineHeight: 1.65 }}>{item.text}</div>
+              <div style={{ fontFamily: sans, fontSize: 12, color: "#b8c4da", lineHeight: 1.65 }}>{item.text}</div>
             </div>
           ))}
         </div>

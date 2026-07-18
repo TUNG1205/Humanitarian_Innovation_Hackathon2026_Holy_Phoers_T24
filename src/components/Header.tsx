@@ -1,7 +1,7 @@
 import { AlertTriangle, Radio, MapPin, Wifi, WifiOff } from "lucide-react";
 import { REGIONS, TABS } from "../data/regions";
 import { ALERT_LEVELS } from "../data/alertLevels";
-import { mono, condensed, radiusSm, accent } from "../lib/theme";
+import { mono, condensed, radiusSm, accent, accentWarm, cardBg } from "../lib/theme";
 
 interface HeaderProps {
   region: string;
@@ -19,14 +19,14 @@ export function Header({ region, setRegion, alertLevel, isOffline, tab, setTab }
     <header style={{ borderBottom: "1px solid rgba(148,163,184,0.12)", background: "#0a0f1a", position: "sticky", top: 0, zIndex: 40 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 34, height: 34, background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 4px 14px rgba(34,211,238,0.3)", borderRadius: radiusSm, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ width: 34, height: 34, background: `linear-gradient(135deg, ${accent}, #818cf8 60%, ${accentWarm})`, boxShadow: "0 4px 16px rgba(34,211,238,0.35)", borderRadius: radiusSm, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <Radio size={17} color="white" />
           </div>
           <div>
             <div style={{ fontFamily: condensed, fontSize: 19, fontWeight: 700, letterSpacing: "0.09em", color: "#f1f5f9", lineHeight: 1.1 }}>
               CLIMATE RESILIENCE SYSTEM
             </div>
-            <div style={{ fontFamily: mono, fontSize: 9, color: "#4b5875", letterSpacing: "0.12em" }}>
+            <div style={{ fontFamily: mono, fontSize: 9, color: "#a3b1c9", letterSpacing: "0.12em" }}>
               MONITORING · PREDICTION · EMERGENCY RESPONSE
             </div>
           </div>
@@ -35,7 +35,7 @@ export function Header({ region, setRegion, alertLevel, isOffline, tab, setTab }
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <div style={{ position: "relative" }}>
             <select value={region} onChange={e => setRegion(e.target.value)} style={{
-              background: "#131a26", border: "1px solid rgba(255,255,255,0.12)", borderRadius: radiusSm, color: "#f1f5f9",
+              background: cardBg, border: "1px solid rgba(255,255,255,0.12)", borderRadius: radiusSm, color: "#f1f5f9",
               fontFamily: mono, fontSize: 10, padding: "6px 28px 6px 10px",
               outline: "none", cursor: "pointer", appearance: "none", letterSpacing: "0.04em",
             }}>
@@ -67,7 +67,7 @@ export function Header({ region, setRegion, alertLevel, isOffline, tab, setTab }
             padding: "10px 18px", border: "none", cursor: "pointer",
             background: tab === t.id ? "rgba(56,189,248,0.08)" : "transparent",
             borderRadius: "6px 6px 0 0",
-            color: tab === t.id ? accent : "#64748b",
+            color: tab === t.id ? accent : "#a3b1c9",
             borderBottom: tab === t.id ? `2px solid ${accent}` : "2px solid transparent",
             whiteSpace: "nowrap", transition: "color 0.12s, background 0.12s",
           }}>{t.label}</button>
