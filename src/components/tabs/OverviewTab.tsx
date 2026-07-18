@@ -38,7 +38,8 @@ export function OverviewTab({ alertLevel, headline, region, current, forecast, a
   return (
     <div style={{ display: "grid", gap: 22 }}>
       <div style={{
-        background: "linear-gradient(120deg, #2a1200, #1c0e04)", border: `1px solid ${alertCfg.color}`, borderRadius: radius,
+        background: `linear-gradient(120deg, color-mix(in srgb, ${alertCfg.color} 10%, #0a0f1a), color-mix(in srgb, ${alertCfg.color} 3%, #0a0f1a))`,
+        border: `1px solid ${alertCfg.color}`, borderRadius: radius,
         padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -47,12 +48,12 @@ export function OverviewTab({ alertLevel, headline, region, current, forecast, a
             <div style={{ fontFamily: condensed, fontSize: 16, fontWeight: 700, color: alertCfg.color, letterSpacing: "0.1em" }}>
               {alertCfg.label} — {region.toUpperCase()}
             </div>
-            <div style={{ fontFamily: mono, fontSize: 10, color: "#e8b088", marginTop: 3 }}>
+            <div style={{ fontFamily: mono, fontSize: 10, color: `color-mix(in srgb, ${alertCfg.color} 70%, white)`, marginTop: 3 }}>
               {headline}
             </div>
           </div>
         </div>
-        <div style={{ fontFamily: mono, fontSize: 9, color: "#b8925e", letterSpacing: "0.08em" }}>
+        <div style={{ fontFamily: mono, fontSize: 9, color: `color-mix(in srgb, ${alertCfg.color} 55%, white)`, letterSpacing: "0.08em" }}>
           UPDATED: {new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })} LOCAL
         </div>
       </div>

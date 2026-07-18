@@ -45,7 +45,7 @@ export function Header({ region, setRegion, alertLevel, isOffline, tab, setTab }
           </div>
 
           <div style={{
-            background: alertCfg.bg, border: `1px solid ${alertCfg.color}`, borderRadius: radiusSm,
+            background: `color-mix(in srgb, ${alertCfg.color} 12%, #0a0f1a)`, border: `1px solid ${alertCfg.color}`, borderRadius: radiusSm,
             color: alertCfg.color, fontFamily: condensed, fontSize: 13, fontWeight: 700,
             letterSpacing: "0.1em", padding: "5px 12px", display: "flex", alignItems: "center", gap: 6,
           }}>
