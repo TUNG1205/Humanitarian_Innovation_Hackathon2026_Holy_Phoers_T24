@@ -36,6 +36,7 @@ export interface CurrentConditions {
   windGusts: number;
   precipitation: number;
   condition: string;
+  icon: string;
 }
 
 export interface DayForecast {
@@ -51,6 +52,7 @@ export interface DayForecast {
 interface WeatherState {
   current: CurrentConditions | null;
   forecast: DayForecast[];
+  airQuality: number | null;
   loading: boolean;
   error: string | null;
 }
@@ -61,53 +63,71 @@ export function useWeather(): WeatherState {
   const [state, setState] = useState<WeatherState>({
     current: null,
     forecast: [],
+    airQuality: null,
     loading: true,
     error: null,
   });
 
   useEffect(() => {
     let cancelled = false;
-    const url =
+    const weatherUrl =
       `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
       `&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m,precipitation,weather_code` +
       `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max` +
       `&timezone=Pacific%2FFiji&forecast_days=7`;
+    const aqiUrl =
+      `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}` +
+      `&hourly=pm10,pm2_5,us_aqi&timezone=Pacific%2FFiji`;
 
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error(`Weather API returned ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
+    async function loadWeather() {
+      try {
+        const [weatherRes, aqiRes] = await Promise.all([fetch(weatherUrl), fetch(aqiUrl)]);
+
+        if (!weatherRes.ok) throw new Error(`Weather API returned ${weatherRes.status}`);
+        if (!aqiRes.ok) throw new Error(`Air quality API returned ${aqiRes.status}`);
+
+        const weatherData = await weatherRes.json();
+        const aqiData = await aqiRes.json();
         if (cancelled) return;
+
         const current: CurrentConditions = {
-          temperature: Math.round(data.current.temperature_2m),
-          humidity: Math.round(data.current.relative_humidity_2m),
-          windSpeed: Math.round(data.current.wind_speed_10m),
-          windGusts: Math.round(data.current.wind_gusts_10m),
-          precipitation: data.current.precipitation,
-          condition: conditionFor(data.current.weather_code).label,
+          temperature: Math.round(weatherData.current.temperature_2m),
+          humidity: Math.round(weatherData.current.relative_humidity_2m),
+          windSpeed: Math.round(weatherData.current.wind_speed_10m),
+          windGusts: Math.round(weatherData.current.wind_gusts_10m),
+          precipitation: weatherData.current.precipitation,
+          condition: conditionFor(weatherData.current.weather_code).label,
+          icon: conditionFor(weatherData.current.weather_code).icon,
         };
 
-        const forecast: DayForecast[] = data.daily.time.map((_: string, i: number) => {
-          const c = conditionFor(data.daily.weather_code[i]);
+        const forecast: DayForecast[] = weatherData.daily.time.map((_: string, i: number) => {
+          const c = conditionFor(weatherData.daily.weather_code[i]);
           return {
-            d: i === 0 ? "TODAY" : DAY_LABELS[(new Date(data.daily.time[i]).getDay() + 1) % 7] ?? "—",
+            d: i === 0 ? "TODAY" : DAY_LABELS[(new Date(weatherData.daily.time[i]).getDay() + 1) % 7] ?? "—",
             icon: c.icon,
-            hi: Math.round(data.daily.temperature_2m_max[i]),
-            lo: Math.round(data.daily.temperature_2m_min[i]),
-            rain: Math.round(data.daily.precipitation_probability_max[i]),
-            wind: Math.round(data.daily.wind_speed_10m_max[i]),
+            hi: Math.round(weatherData.daily.temperature_2m_max[i]),
+            lo: Math.round(weatherData.daily.temperature_2m_min[i]),
+            rain: Math.round(weatherData.daily.precipitation_probability_max[i]),
+            wind: Math.round(weatherData.daily.wind_speed_10m_max[i]),
             cond: c.label,
           };
         });
 
-        setState({ current, forecast, loading: false, error: null });
-      })
-      .catch((err: Error) => {
-        if (!cancelled) setState(s => ({ ...s, loading: false, error: err.message }));
-      });
+        const aqiSeries = aqiData.hourly?.us_aqi;
+        const airQuality = Array.isArray(aqiSeries) && aqiSeries.length
+          ? Math.round(aqiSeries[aqiSeries.length - 1])
+          : null;
 
+        setState({ current, forecast, airQuality, loading: false, error: null });
+      } catch (err: unknown) {
+        if (!cancelled) {
+          const message = err instanceof Error ? err.message : "Unknown API error";
+          setState((s: WeatherState) => ({ ...s, loading: false, error: message }));
+        }
+      }
+    }
+
+    loadWeather();
     return () => { cancelled = true; };
   }, []);
 
