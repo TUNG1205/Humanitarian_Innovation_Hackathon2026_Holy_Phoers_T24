@@ -1,5 +1,5 @@
 import { AlertTriangle } from "lucide-react";
-import { useWeather } from "../../hooks/useWeather";
+import type { CurrentConditions, DayForecast } from "../../hooks/useWeather";
 import { useImpactAssessment } from "../../hooks/useImpactAssessment";
 import { FALLBACK_WEATHER } from "../../data/climate";
 import { FALLBACK_IMPACT_DATA } from "../../data/impactFallback";
@@ -18,8 +18,17 @@ function aqiCategory(aqi: number): { label: string; color: string } {
   return { label: "Hazardous", color: "#7f1d1d" };
 }
 
-export function OverviewTab({ alertLevel, region }: { alertLevel: number; region: string }) {
-  const { current, forecast, airQuality, loading } = useWeather();
+interface OverviewTabProps {
+  alertLevel: number;
+  headline: string;
+  region: string;
+  current: CurrentConditions | null;
+  forecast: DayForecast[];
+  airQuality: number | null;
+  loading: boolean;
+}
+
+export function OverviewTab({ alertLevel, headline, region, current, forecast, airQuality, loading }: OverviewTabProps) {
   const forecastDays = forecast.length ? forecast : FALLBACK_WEATHER;
   const alertCfg = ALERT_LEVELS[alertLevel]!;
 
@@ -39,7 +48,7 @@ export function OverviewTab({ alertLevel, region }: { alertLevel: number; region
               {alertCfg.label} — {region.toUpperCase()}
             </div>
             <div style={{ fontFamily: mono, fontSize: 10, color: "#c47a4a", marginTop: 3 }}>
-              Tropical Storm Watch · Coastal Flood Advisory · High Wind Warning in Effect
+              {headline}
             </div>
           </div>
         </div>
