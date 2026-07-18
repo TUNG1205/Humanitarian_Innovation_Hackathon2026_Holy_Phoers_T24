@@ -12,6 +12,7 @@ map, recovery protocols, AI-generated risk assessments, and offline-readable eme
 ```
 npm install
 npm run dev
+
 ```
 
 The Forecast tab's AI risk assessments need a backend function (see below) to work locally — without

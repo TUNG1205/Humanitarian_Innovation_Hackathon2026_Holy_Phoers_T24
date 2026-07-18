@@ -1,7 +1,8 @@
 import { AlertTriangle } from "lucide-react";
 import { useWeather } from "../../hooks/useWeather";
+import { useImpactAssessment } from "../../hooks/useImpactAssessment";
 import { FALLBACK_WEATHER } from "../../data/climate";
-import { IMPACT_DATA } from "../../data/impact";
+import { FALLBACK_IMPACT_DATA } from "../../data/impactFallback";
 import { ALERT_LEVELS } from "../../data/alertLevels";
 import { mono, condensed, sans, cardBorder, radius, alertColor } from "../../lib/theme";
 import { SectionTitle } from "../shared/SectionTitle";
@@ -21,6 +22,9 @@ export function OverviewTab({ alertLevel, region }: { alertLevel: number; region
   const { current, forecast, airQuality, loading } = useWeather();
   const forecastDays = forecast.length ? forecast : FALLBACK_WEATHER;
   const alertCfg = ALERT_LEVELS[alertLevel]!;
+
+  const impact = useImpactAssessment(current, airQuality, !loading);
+  const impactData = impact.assessments ?? FALLBACK_IMPACT_DATA;
 
   return (
     <div style={{ display: "grid", gap: 22 }}>
@@ -74,9 +78,11 @@ export function OverviewTab({ alertLevel, region }: { alertLevel: number; region
       </div>
 
       <div>
-        <SectionTitle>Regional Impact Snapshot — Next 12 Months</SectionTitle>
+        <SectionTitle>
+          Regional Impact Snapshot — Next 12 Months{impact.error ? " — AI assessment unavailable, showing baseline" : impact.loading && !loading ? " — generating live assessment…" : impact.assessments ? " — AI-generated, live" : ""}
+        </SectionTitle>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-          {IMPACT_DATA.map((d, i) => (
+          {impactData.map((d, i) => (
             <div key={i} style={{ background: "#131a26", border: cardBorder, borderRadius: radius, padding: "16px 18px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <div style={{ fontFamily: mono, fontSize: 9, color: "#4b5875", letterSpacing: "0.12em" }}>{d.label.toUpperCase()}</div>

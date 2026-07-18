@@ -1,7 +1,8 @@
-// Modeled estimates for the Lami case study, informed by UNDP SIDS Fiji country profile
-// (sids.data.undp.org/country-profiles/fiji) and historical cyclone/flood damage patterns
-// (see disasters.ts). Illustrative for demo purposes, not a validated engineering forecast.
-export const IMPACT_DATA = [
+// Used if the AI impact assessment (src/hooks/useImpactAssessment.ts, backed by
+// api/impact-assessment.ts) hasn't resolved yet, fails, or GROQ_API_KEY isn't configured.
+// Modeled estimates informed by UNDP SIDS Fiji country profile (sids.data.undp.org/country-profiles/fiji)
+// and historical cyclone/flood damage patterns (see disasters.ts).
+export const FALLBACK_IMPACT_DATA = [
   {
     label: "Financial",
     current: 34, projected: 67,
